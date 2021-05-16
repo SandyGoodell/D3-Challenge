@@ -61,8 +61,36 @@ d3.csv("assets/data/data.csv").then(filterdata => {
       .attr("cy", d => YlinearScale(d.healthcare))
       .attr("r", "15")
       .classed("stateCircle", true)
+      .attr("opacity", ".5");
 
     
+    // Put state abbreviation in circle
+    var circlesTextGroup = chartGroup.selectAll()
+      .data(filterdata)
+      .enter()
+      .append("text")
+      .text(d=>(d.abbr))
+      .attr("x", d => XlinearScale(d.poverty))
+      .attr("y", d => YlinearScale(d.healthcare))
+      .style("font-size", "12px")
+      .style("text-anchor", "middle")
+      .attr("fill", "black");   
+
+    // create axes labels
+    chartGroup.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left + 40)
+    .attr("x", 0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("class", "axisText")
+    .text("Lacks Healthcare (%)");
+
+  chartGroup.append("text")
+    .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+    .attr("class", "axisText")
+    .text("In Poverty (%)");
+
+ 
 
 
 })

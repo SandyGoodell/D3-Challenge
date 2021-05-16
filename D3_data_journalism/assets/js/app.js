@@ -61,21 +61,8 @@ d3.csv("assets/data/data.csv").then(filterdata => {
       .attr("cy", d => YlinearScale(d.healthcare))
       .attr("r", "15")
       .classed("stateCircle", true)
-  
-    
-
 
     
-
-    
-
-
-
-
-
-
-    
-
 
 
 })

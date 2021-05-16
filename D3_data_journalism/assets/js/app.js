@@ -27,30 +27,20 @@ const chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Retrieve data from the CSV file and execute everything below
-d3.csv("assets/data/data.csv").then(data => {
-      // Parse data
-    let filterdata = {
-      "poverty" : [],
-      "healthcare" : []
-    }
-     //console.log((data));
-    data.forEach(function(data) {
-      
-      filterdata.poverty.push(parseFloat(data.poverty));
-      //data.age = +data.age;
-      filterdata.healthcare.push(parseFloat(data.healthcare));
-      //console.log("Healthcare:", data.healthcare);
-      //console.log("Poverty:", data.poverty);
-    });
-    console.log(filterdata.healthcare);
-    console.log(filterdata.poverty);
+d3.csv("assets/data/data.csv").then(filterdata => {
+  console.log(filterdata)
+  filterdata.forEach(d => {
+    d.poverty = +d.poverty,
+    d.healthcare = +d.healthcare
+
+  })
+
     var XlinearScale = d3.scaleLinear()
-      .domain([d3.min(filterdata.poverty), d3.max(filterdata.poverty)])
+      .domain([d3.min(filterdata, d => d.poverty), d3.max(filterdata, d => d.poverty)])
       .range([0,width]);
     var YlinearScale = d3.scaleLinear()
-      .domain([d3.min(filterdata.healthcare), d3.max(filterdata.healthcare)])
+      .domain([d3.min(filterdata, d => d.healthcare), d3.max(filterdata, d => d.healthcare)])
       .range([height, 0]);
-    
 
     var BottomAxis = d3.axisBottom(XlinearScale)
     var LeftAxis = d3.axisLeft(YlinearScale)
@@ -62,18 +52,12 @@ d3.csv("assets/data/data.csv").then(data => {
     let yaxis = chartGroup.append("g")
       .call(LeftAxis)
 
-    let nodes = svg.selectAll("g").data(filterdata)
-
-    
-    var Circlegroup = chartGroup.selectAll("circle")
+      
+    let circleGroup = chartGroup.append('g')
+    circleGroup.selectAll("circle")
       .data(filterdata)
       .join("circle")
-      .attr("cx", d => {
-      console.log(d["poverty"])
-
-
-
-      })
+      .attr("cx", d => XlinearScale(d.poverty))
       .attr("cy", d => YlinearScale(d.healthcare))
       .attr("r", "15")
       .classed("stateCircle", true)
